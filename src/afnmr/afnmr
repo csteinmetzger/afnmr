@@ -95,14 +95,16 @@ afterloadpdb=""
 if [ $# -lt 1 ]; then usage; exit 1;  fi
 
 args=$@
+prefix=${@: -1}
 
-cat > leap.in << EOF
-source leaprc.protein.ff14SB
-source leaprc.phosaa14SB
-source leaprc.RNA.OL3
-source leaprc.DNA.OL15
+cat > ${prefix}_leap.in << EOF
+#source leaprc.protein.ff14SB
+#source leaprc.phosaa14SB
+#source leaprc.RNA.OL3
+#source leaprc.DNA.OL15
 source leaprc.water.tip3p
-source leaprc.gaff2
+#source leaprc.gaff2
+source oldff/leaprc.ff99SBildn
 set default PBRadii mbondi3
 EOF
 
@@ -134,8 +136,8 @@ while [ $# -gt 0 ]; do
         -workdir)     workdir="T";;
         -nobuild)     build="no";;
         -nomin)       min="no";;
-        -frcmod)      shift; echo "loadAmberParams $1" >> leap.in;;
-        -offlib)      shift; echo "loadOFF $1" >> leap.in;;
+        -frcmod)      shift; echo "loadAmberParams $1" >> ${prefix}_leap.in;;
+        -offlib)      shift; echo "loadOFF $1" >> ${prefix}_leap.in;;
         -afterloadpdb)  shift; afterloadpdb=$1;;
         -help)        usage; exit 0;;
         --help)       usage; exit 0;;
@@ -159,7 +161,7 @@ if [ "$workdir" = "T" ]; then
    cd $1
    /bin/rm -f $1.pdb
    /bin/ln -s ../$1.pdb
-   cp ../leap.in .
+   cp ../${prefix}_leap.in .
 fi
 
 if [ "$qopt" = "Z" ]; then
@@ -192,7 +194,7 @@ echo "Running AFNMR on $1.pdb"
 #  Use tleap to create the Amber prmtop file:
 #============================================================================
 echo "Running tleap"
-cat <<EOF >> leap.in
+cat <<EOF >> ${prefix}_leap.in
 set default nocenter on
 set default reorder_residues off
 x = loadpdb $1.pdb
@@ -201,15 +203,15 @@ saveamberparm x $1.parm7 $1.x
 quit
 EOF
 
-$AFNMRHOME/bin/tleap -f leap.in > tleap.out
+$AFNMRHOME/bin/tleap -f ${prefix}_leap.in > ${prefix}_tleap.out
 if [ ! -s $1.parm7 ]; then 
-   echo "Error in tleap: check tleap.out or leap.log "
+   echo "Error in tleap: check ${prefix}_tleap.out or leap.log "
    exit 1
 fi
-echo "====== tleap.out =====================================================" \
+echo "====== ${prefix}_tleap.out =====================================================" \
      >> $1.afnmr.log
-cat tleap.out >> $1.afnmr.log
-/bin/rm leap.in tleap.out
+cat ${prefix}_tleap.out >> $1.afnmr.log
+/bin/rm ${prefix}_leap.in ${prefix}_tleap.out
 
 if [ $min = "yes" ]; then
 
@@ -293,7 +295,7 @@ fi
 
 #  end of "if build=yes" block:
 else
-    /bin/rm -f leap.in
+    /bin/rm -f ${prefix}_leap.in
     echo "nobuild: Running AFNMR on $1.pqr"
 fi
 
@@ -453,7 +455,7 @@ fi
 
 if [ "$workdir" = "T" ]; then
    cd ../
-   /bin/rm -f leap.in
+   /bin/rm -f ${prefix}_leap.in
 fi
 
 echo "done"
