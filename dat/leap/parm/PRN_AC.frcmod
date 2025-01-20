@@ -1,0 +1,26 @@
+Remark line goes here
+MASS
+
+BOND
+CT-O   449.90   1.317       same as c3- o, penalty score=  0.0
+
+ANGLE
+CT-CT-O    68.500     113.010   same as c3-c3-o , penalty score=  0.0
+H4-CA-NC   51.000     118.360   same as h4-ca-nc, penalty score=  0.0
+H1-CT-O    52.600     116.450   same as h1-c3-o , penalty score=  0.0
+
+DIHE
+CT-CT-OS-P    3    1.150         0.000          -3.000      same as c3-c3-os-p5
+CT-CT-OS-P    1    3.950       180.000           1.000      same as c3-c3-os-p5, penalty score=  0.0
+CT-OS-P -O2   1    0.800         0.000          -2.000      same as c3-os-p5-o 
+CT-OS-P -O2   1    0.550         0.000           3.000      same as c3-os-p5-o , penalty score=  0.0
+
+IMPROPER
+H5-N*-CK-NB         1.1          180.0         2.0          Using the default value
+CB-H4-CA-NC         1.1          180.0         2.0          Using the default value
+H5-NC-CQ-NC         1.1          180.0         2.0          Using the default value
+
+NONBON
+
+
+
