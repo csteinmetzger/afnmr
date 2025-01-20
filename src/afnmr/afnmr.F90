@@ -82,7 +82,7 @@ program afnmr_x
       integer system
 #endif
 
-      integer, parameter ::MAXNRES=33,MAXPRES=41
+      integer, parameter ::MAXNRES=36,MAXPRES=41
       character(len=3) :: nresn(MAXNRES), presn(MAXPRES)
 
       nresn(1) = '  G'
@@ -118,6 +118,9 @@ program afnmr_x
       nresn(31) = 'DMA'
       nresn(32) = 'M6A'
       nresn(33) = 'CYH'
+      nresn(34) = 'PRN'
+      nresn(35) = '7DA'
+      nresn(36) = 'MA7'
 
       presn(1) = 'ALA'
       presn(2) = 'ARG'
